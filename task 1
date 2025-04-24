@@ -1,0 +1,20 @@
+def generate_cipher_key(keyword):
+    seen = set()
+    unique_keyword = []
+    for char in keyword:
+        if char not in seen:
+            seen.add(char)
+            unique_keyword.append(char)
+
+    sorted_chars = sorted(unique_keyword)
+
+    rank_dict = {char: str(index + 1) for index, char in enumerate(sorted_chars)}
+
+    cipher_key = ''.join(rank_dict[char] for char in unique_keyword)
+
+    return cipher_key
+
+#main
+user_keyword = input("Enter the keyword for the cipher key: ").lower()
+key = generate_cipher_key(user_keyword)
+print("Generated Cipher Key:", key)
