@@ -1,0 +1,61 @@
+import random
+import string
+
+# Function to generate cipher key from the keyword
+def generate_cipher_key(keyword):
+    # Step 1: Remove duplicates while preserving order
+    seen = set()
+    unique_keyword = []
+    for char in keyword:
+        if char not in seen:
+            seen.add(char)
+            unique_keyword.append(char)
+
+    # Step 2: Sort the unique characters to determine ranking
+    sorted_chars = sorted(unique_keyword)
+
+    # Step 3: Create a dictionary to store rank (starting from 1)
+    rank_dict = {char: str(index + 1) for index, char in enumerate(sorted_chars)}
+
+    # Step 4: Generate key by mapping each char in unique_keyword to its rank
+    cipher_key = ''.join(rank_dict[char] for char in unique_keyword)
+
+    return cipher_key
+
+# Function to create a matrix from the long message
+def create_matrix(text, key_len):
+  
+    # Clean up the text (remove spaces, make it lowercase)
+    text = text.replace(" ", "").lower()
+
+    # Calculate how many rows we need for the matrix
+    rows = (len(text) // key_len) + (1 if len(text) % key_len != 0 else 0)
+
+    # Add padding if necessary (random letters)
+    padding_needed = rows * key_len - len(text)  # How much padding is needed
+    padded_text = text + ''.join(random.choice(string.ascii_lowercase) for _ in range(padding_needed))  # Random letters padding
+
+    # Create the matrix by filling row by row
+    matrix = []
+    for i in range(0, len(padded_text), key_len):
+        matrix.append(list(padded_text[i:i+key_len]))
+
+    return matrix
+
+# Main code
+user_keyword = input("Enter the keyword for the cipher key: ").lower()  # User input for keyword
+key = generate_cipher_key(user_keyword)  # Generate cipher key based on the keyword
+key_length = len(key)  # Key length
+
+# Define your long message here
+long_message = "I went to Pulau Pinang just to eat Nasi Kandar Pokok Ketapang last weekend!"
+
+# Create the matrix based on the long message
+matrix = create_matrix(long_message, key_length)
+
+# Output the results
+print("Generated Cipher Key:", key)
+print("\nLong Message:", long_message)
+print("\nMatrix:")
+for row in matrix:
+    print(row)
